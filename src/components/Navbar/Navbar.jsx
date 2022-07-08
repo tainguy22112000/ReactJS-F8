@@ -1,9 +1,9 @@
 import React from 'react'
-import './navbar.sass'
+import style from './navbar.module.sass'
 
 const Navbar = () => {
   return (
-    <div className= 'header header-container'>
+    <div className= {`${style.header} ${style.header_container}`}>
         Nexon Dev Vina
     </div>
   )
