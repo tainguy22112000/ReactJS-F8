@@ -1,9 +1,11 @@
 import './App.sass';
 import Navbar from './components/Navbar/Navbar';
 import Button from './components/Button/Button';
+import Content from './components/Content/Content';
 import {MantineProvider} from '@mantine/core';
 import Input from './components/Input/Input';
 import {useState} from 'react'
+import Counter from './components/Counter/Counter';
 
 function App() {
 
@@ -14,9 +16,22 @@ function App() {
   ];
 
   let firstAccess = true;
+  
+ 
   const contentList = ['API', 'Docs', 'Github'];
   const [gift, setGift] =  useState('Not response');
   const [like, setLike] = useState(0);
+  const [job, setJob] = useState('');
+  const [toggle, setToggle] = useState(false);
+  const [counter, setCounter] = useState(false);
+
+  // To optimize code, when jobs prop is rendered at the first time
+  const [jobs, setJobs] = useState(() => {
+    const storageJobs = JSON.parse(localStorage.getItem('jobs'));
+    console.log(storageJobs);
+    return storageJobs ?? []
+  } 
+  );
 
   function handleClick ({isPrimaryColor}) {
     return console.log(isPrimaryColor);
@@ -24,6 +39,19 @@ function App() {
 
   function handledLike () {
     setLike(like +  1);
+  }
+
+  const handledJob = () => {
+    setJobs(prev => {
+      const newJobs = [...prev, job];
+      const jsonJobs = JSON.stringify(newJobs);
+     
+      //Save to local storage
+      localStorage.setItem('jobs', jsonJobs);
+      return newJobs;
+    });
+    setJob('');
+   
   }
 
   function List ({data, children}) {
@@ -83,6 +111,7 @@ function App() {
             type = 'type'
             placeholder = 'Enter the name ... '
             title = 'This is an input element'
+            
             onFocus = {() => {console.log(Math.random())}}
           />
           
@@ -90,6 +119,32 @@ function App() {
             {(item, index) => <li key = {index}>{item}</li>}
           </List>
 
+          <Input
+            label = ''
+            type = 'type'
+            placeholder = 'Enter the task ...'
+            value = {job}
+            onChange = {e => setJob(e.target.value)}
+          />
+
+          <button onClick = {handledJob}>Add</button>
+
+          <ul>
+            {jobs.map((job, index) => (
+              <li key = {index}>{job}</li>
+            ))}
+          </ul>
+          
+          <div style = {{padding: 20}}>
+            <button onClick = {() => setToggle(!toggle)}>Toggle</button>
+            {toggle && <Content/>}
+          </div>
+          
+          <div style = {{padding: 20}}>
+            <button onClick = {() => setCounter(!counter)}>Show Timer</button>
+            {counter && <Counter/>}
+          </div>
+          
 
       </div>
     </MantineProvider>
