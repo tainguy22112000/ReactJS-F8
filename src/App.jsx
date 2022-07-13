@@ -1,11 +1,40 @@
 import './App.sass';
 import Navbar from './components/Navbar/Navbar';
-import Button from './components/Button/Button';
 import Content from './components/Content/Content';
-import {MantineProvider} from '@mantine/core';
-import Input from './components/Input/Input';
-import {useState} from 'react'
+import {MantineProvider, Badge, Group, Button, ColorPicker, Text, Modal, InputWrapper, Input} from '@mantine/core';
+// import Input from './components/Input/Input';
+import {useState, useEffect, useRef, useReducer} from 'react'
 import Counter from './components/Counter/Counter';
+import Avatar from './components/Avatar/Avatar';
+import Lesson from './components/Lesson/Lesson';
+import Timer from './components/Timer/Timer';
+import Product from './components/Product/Product';
+import Todo from './components/Todo/Todo';
+import Theme from './components/Theme/Theme';
+
+// Init state
+const initState = 0
+
+
+// Action
+const UP_ACTION = 'up';
+const DOWN_ACTION = 'down';
+
+
+// Reducer
+const reducer = (state, action) => {
+  console.log('reducer running')
+  switch(action) {
+    case UP_ACTION:
+      return state + 1
+    case DOWN_ACTION:
+      return state - 1
+    default:
+      throw new Error('Invalid action')
+  }
+}
+
+
 
 function App() {
 
@@ -15,8 +44,11 @@ function App() {
     'House'
   ];
 
-  let firstAccess = true;
+  // Dispatch
+  const [count, dispatch] = useReducer(reducer, initState)
   
+
+  let firstAccess = true;
  
   const contentList = ['API', 'Docs', 'Github'];
   const [gift, setGift] =  useState('Not response');
@@ -24,6 +56,11 @@ function App() {
   const [job, setJob] = useState('');
   const [toggle, setToggle] = useState(false);
   const [counter, setCounter] = useState(false);
+  const [lesson, setLesson] = useState(false);
+  const [color, setColor] = useState('rgba(47, 119, 150, 0.7)')
+  const [load, setLoad] = useState(false)
+  const [theme, setTheme] = useState('dark')
+  const [opened, setOpened] = useState(false)
 
   // To optimize code, when jobs prop is rendered at the first time
   const [jobs, setJobs] = useState(() => {
@@ -51,7 +88,11 @@ function App() {
       return newJobs;
     });
     setJob('');
-   
+  }
+
+  const handleTheme = () => {
+      setTheme(!theme)
+      console.log(theme)
   }
 
   function List ({data, children}) {
@@ -71,7 +112,7 @@ function App() {
 
   return (
     <MantineProvider 
-      theme = {{colorScheme: 'dark', color: {dark: '#d5d7e0'}}} 
+      theme = {{colorScheme: 'light', color: {dark: '#d5d7e0'}}} 
       withGlobalStyles
       withNormalizeCSS
     >
@@ -79,15 +120,15 @@ function App() {
           <Navbar/>
 
           <div className="btn__element">
-          {firstAccess && <Button
+          {/* {firstAccess && <Button
             title = 'Create'
             href = 'https://www.youtube.com/watch?v=6e1OLH5Iw2U'
             onClick = {randomGift}
             isPrimaryColor = 'blue'
           />
-          }
+          } */}
 
-          <Button
+          {/* <Button
             title = 'Like'
             href = ''
             onClick = {handledLike}
@@ -99,33 +140,33 @@ function App() {
             href = ''
             onClick = {() => {setLike(0)}}
             isPrimaryColor = "red"
-          />
+          /> */}
           </div>
          
 
           <h1>{gift}</h1>
           <h1>{like}</h1>
 
-          <Input
+          {/* <Input
             label = 'Full name'
             type = 'type'
             placeholder = 'Enter the name ... '
             title = 'This is an input element'
             
             onFocus = {() => {console.log(Math.random())}}
-          />
+          /> */}
           
           <List data = {contentList}>
             {(item, index) => <li key = {index}>{item}</li>}
           </List>
 
-          <Input
+          {/* <Input
             label = ''
             type = 'type'
             placeholder = 'Enter the task ...'
             value = {job}
             onChange = {e => setJob(e.target.value)}
-          />
+          /> */}
 
           <button onClick = {handledJob}>Add</button>
 
@@ -144,10 +185,110 @@ function App() {
             <button onClick = {() => setCounter(!counter)}>Show Timer</button>
             {counter && <Counter/>}
           </div>
-          
 
+          <Avatar/>
+
+          <div style = {{padding: 20}}>
+            <button onClick = {() => setLesson(!lesson)}>Show Lesson</button>
+            {lesson && <Lesson/>}
+          </div>
+          
+          <Timer/>
+
+          <Badge
+              size = "xl"
+          >
+              Badge
+          </Badge>
+
+         
+          <div style = {{padding: 20}}>
+            <button onClick = {() => setLesson(!lesson)}>Show Lesson</button>
+            {lesson && 
+            <Group>
+              <ColorPicker
+                  format='rgba' 
+                  value = {color} 
+                  onChange ={setColor}
+                  size = "xl"
+                  fullWidth = {true}
+              />
+              <Text>{color}</Text>
+             
+            </Group>
+            }
+          </div>
+           
+          {
+              lesson && 
+              <Modal withCloseButton = {false} centered>
+                    Incorrect password !!! 
+              </Modal>
+          }
+
+          <Product/>
+
+          <div style = {{padding: '0 40px'}}>
+            <h1>{count}</h1>
+            <button onClick={() => dispatch(DOWN_ACTION)}>-</button>
+            <button onClick={() => dispatch(UP_ACTION)}>+</button>
+          </div>
+
+          <Todo/>
+
+          {/* <InputWrapper 
+              label = "Credit card information"
+              id = "input-demo"
+              required
+              description = "Please enter your credit card information, we need some money"
+              error = "Your credit card expired"
+          >
+              <Input
+                  id = "input-demo" 
+                  placeholder='Your email'
+                  sx = "xs"
+                  required
+                  onChange={() => console.log('Pressed')}
+                  style = {{width: 200, marginTop: 10 }}
+              />
+          </InputWrapper> */}
+          <div style = {{padding: 20}}>
+            <Button
+                type = "submit"
+                size = "sm"
+                onClick={() => setOpened(true)}
+            >
+              Toggle Theme
+              
+            </Button>
+            {load && <Theme/>}
+          </div>
+          
+          <Button
+              type = "submit"
+              size = "sm"
+              onClick = {handleTheme}
+              style = {{backgroundColor:  theme ? "red" : "blue"}}
+          >
+                Change Color Theme
+          </Button>
+
+          <Modal
+              opened = {opened}
+              onClose = {() => setOpened(false)}
+              title="Introduce yourself"
+              withCloseButton={true}
+              centered
+              size= {378}
+              closeButtonLabel="Close authentication modal"
+              closeOnClickOutside={false}
+          >
+            <Theme theme ={theme}/>
+          </Modal>
+         
       </div>
     </MantineProvider>
+    
   
   );
 }
