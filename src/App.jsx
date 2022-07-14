@@ -11,6 +11,7 @@ import Timer from './components/Timer/Timer';
 import Product from './components/Product/Product';
 import Todo from './components/Todo/Todo';
 import Theme from './components/Theme/Theme';
+import TaskList from './components/TaskList/TaskList';
 
 // Init state
 const initState = 0
@@ -285,6 +286,8 @@ function App() {
           >
             <Theme theme ={theme}/>
           </Modal>
+
+          <TaskList></TaskList>
          
       </div>
     </MantineProvider>

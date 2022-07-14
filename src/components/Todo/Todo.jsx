@@ -6,10 +6,12 @@ const initState = {
     job: '',
     jobs: []
 }
+
+
+// ACTION
 const SET_JOB = 'set_job';
 const ADD_JOB = 'add_job';
 const DEL_JOB = 'delete_job';
-
 const setJob = payload => {
     return {
         type: SET_JOB,
@@ -31,6 +33,8 @@ const deleteJob = payload => {
     }
 }
 
+
+// REDUCER
 const reducer = (state, action) => {
     const {type, payload} = action
     console.log(action)
