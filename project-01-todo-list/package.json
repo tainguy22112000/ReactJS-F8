@@ -1,25 +1,14 @@
 {
-  "name": "react-f8",
+  "name": "project-01-todo-list",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mantine/core": "^4.2.12",
-    "@mantine/hooks": "^4.2.12",
-    "@mantine/next": "^4.2.12",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "node-sass": "^7.0.1",
-    "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-<<<<<<< HEAD
-    "react-router-dom": "^6.3.0",
-=======
-    "react-router": "^6.3.0",
->>>>>>> 0ad6aa680de9f4b9aa7222a0e4d9c520fa2b0da7
-    "react-scripts": "^5.0.1",
-    "tabler-icons-react": "^1.52.0",
+    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

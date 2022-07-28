@@ -4,11 +4,17 @@ import './Button.sass'
 const Button = ({title, href, onClick, isPrimaryColor}) => {
     
     return (
-        <button onClick = {onClick} className = 'btn btn__header' style = {{"backgroundColor": `${isPrimaryColor}`}}>
-            <a>{/* <a href = {href} target = 'blank'> */}
-                {title}
-            </a>
-        </button>
+        <>
+            <button onClick = {onClick} className = 'btn btn__header' style = {{"backgroundColor": `${isPrimaryColor}`}}>
+                <a>{/* <a href = {href} target = 'blank'> */}
+                    {title}
+                </a>
+            </button>
+
+            <h2>Button</h2>
+        </>
+        
+        
         
     )
 };
