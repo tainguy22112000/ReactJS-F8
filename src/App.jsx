@@ -1,7 +1,7 @@
 import './App.sass';
 import Navbar from './components/Navbar/Navbar';
 import Content from './components/Content/Content';
-import {MantineProvider, Badge, Group, Button, ColorPicker, Text, Modal, InputWrapper, Input} from '@mantine/core';
+import {MantineProvider, Badge, Group, Button, ColorPicker, Text, Modal, InputWrapper, Input, Tab} from '@mantine/core';
 // import Input from './components/Input/Input';
 import {useState, useEffect, useRef, useReducer} from 'react'
 import Counter from './components/Counter/Counter';
@@ -11,6 +11,11 @@ import Timer from './components/Timer/Timer';
 import Product from './components/Product/Product';
 import Todo from './components/Todo/Todo';
 import Theme from './components/Theme/Theme';
+import TaskList from './components/TaskList/TaskList';
+import Pagination from './components/Pagination/Pagination';
+import TableList from './components/TableList/TableList';
+
+import queryString from 'query-string';
 
 // Init state
 const initState = 0
@@ -33,8 +38,6 @@ const reducer = (state, action) => {
       throw new Error('Invalid action')
   }
 }
-
-
 
 function App() {
 
@@ -61,6 +64,16 @@ function App() {
   const [load, setLoad] = useState(false)
   const [theme, setTheme] = useState('dark')
   const [opened, setOpened] = useState(false)
+  const [postList, setPostList] = useState({})
+  const [pagination, setPagination] = useState({
+    _page: 1,
+    _limit: 10,
+    _totalRows: 1
+  })
+  const [filters, setFilters] = useState({
+    _limit: 10,
+    _page: 1,
+  })
 
   // To optimize code, when jobs prop is rendered at the first time
   const [jobs, setJobs] = useState(() => {
@@ -95,6 +108,14 @@ function App() {
       console.log(theme)
   }
 
+  const handlePageChange = (newPage) => {
+    console.log("New page : ", newPage);
+    setFilters({
+      ...filters,
+      _page: newPage
+    })
+  }
+
   function List ({data, children}) {
     return (
       <ul>
@@ -108,6 +129,31 @@ function App() {
 
     setGift(gifts[index]);
   }
+
+  // Server Side 
+  useEffect(() => {
+      async function fetchPostList() {
+        try {
+          //Convert object filter into query
+          const paramString = queryString.stringify(filters)
+
+          // Fetch data
+          const requestUrl = `http://js-post-api.herokuapp.com/api/posts?${paramString}`;
+          const response = await fetch(requestUrl);
+          const responseJSON = await response.json();
+          console.log( { responseJSON } );
+
+          const {data, pagination} = responseJSON;
+          setPostList(data);
+          setPagination(pagination);
+        } catch (error) {
+            console.log("Failed to fecth post list: ", error.message);
+        }
+      }
+      fetchPostList();
+  }, [filters])
+
+  console.log("Data : ", postList);
   
 
   return (
@@ -285,6 +331,18 @@ function App() {
           >
             <Theme theme ={theme}/>
           </Modal>
+
+          <TaskList></TaskList>
+
+          <Pagination
+              pagination= {pagination}
+              onPageChange={handlePageChange}
+          >
+          </Pagination>
+
+          <TableList
+              postList={postList}
+          />
          
       </div>
     </MantineProvider>

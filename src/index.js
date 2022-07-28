@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { StoreProvider, StoreContext } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -26,7 +27,9 @@ emitComment(4)
 
 root.render(
   <React.StrictMode>
-    <App />
+    <StoreProvider>
+      <App />
+    </StoreProvider>
   </React.StrictMode>
 );
 
